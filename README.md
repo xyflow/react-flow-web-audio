@@ -14,7 +14,7 @@ if you want to build your own from scratch!
 
 ### The tutorial covers React Flow topics including:
 
-- Using Zustand for state management.
+- Using zustand for state management.
 - Custom nodes and controls.
 - "Running" or interpreting a React Flow graph.
 
