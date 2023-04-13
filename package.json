@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --base /react-flow-web-audio --outDir docs",
     "preview": "vite preview"
   },
   "dependencies": {
