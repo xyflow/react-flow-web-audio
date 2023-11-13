@@ -1,7 +1,7 @@
 # React Flow Web Audio Playground
 
 This repo contains a small Web Audio playground built with React Flow. Go check
-out the [blog post](https://reactflow.dev/blog/react-flow-and-the-web-audio-api/)
+out the [tutorial](https://reactflow.dev/learn/tutorials/react-flow-and-the-web-audio-api)
 if you want to build your own from scratch!
 
 ### Features of the playground include:
