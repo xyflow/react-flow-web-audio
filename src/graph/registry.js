@@ -1,9 +1,12 @@
-import osc from "../nodes/osc";
-import amp from "../nodes/amp";
-import out from "../nodes/out";
+export const NodeRegistry = new Map();
 
-export const NodeRegistry = new Map([
-  [osc.id, osc],
-  [amp.id, amp],
-  [out.id, out],
-]);
+const modules = import.meta.glob("../nodes/**/index.js", { eager: true });
+
+for (const path in modules) {
+  const node = modules[path].default;
+  if (node?.id && node?.ui && node?.factory) {
+    NodeRegistry.set(node.id, node);
+  } else {
+    console.warn(`Skipped invalid node definition at ${path}`);
+  }
+}
