@@ -31,6 +31,8 @@ export default function App() {
   const store = useStore(selector, shallow);
 
   useEffect(() => {
+    engine.reset();
+    
     for (const node of store.nodes) {
       const def = NodeRegistry.get(node.type);
       if (!def) continue;
@@ -42,7 +44,7 @@ export default function App() {
     }
 
     engine.context.suspend();
-  }, []); // <- Only run once on mount
+  }, []);
 
   return (
     <ReactFlow

@@ -59,4 +59,12 @@ export class WebAudioEngine {
       source.disconnect(target);
     }
   }
+
+  reset() {
+    for (const node of this.nodes.values()) {
+      node.disconnect();
+      node.stop?.();
+    }
+    this.nodes.clear();
+  }
 }
