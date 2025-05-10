@@ -56,7 +56,17 @@ export class WebAudioEngine {
     const target = this.nodes.get(targetId);
 
     if (source && target) {
-      source.disconnect(target);
+      try {
+        source.disconnect(target);
+      } catch (err) {
+        console.warn(`Failed to disconnect ${sourceId} → ${targetId}`, err);
+        // Fallback to disconnecting all
+        try {
+          source.disconnect();
+        } catch (e) {
+          console.error(`Full disconnect failed for ${sourceId}`, e);
+        }
+      }
     }
   }
 
