@@ -8,6 +8,7 @@ import { engine } from "./audio";
 import { tw } from "twind";
 
 import "reactflow/dist/style.css";
+import ImportPatchButton from "./components/ImportPatchButton";
 
 const nodeTypes = Object.fromEntries(
   [...NodeRegistry.entries()].map(([key, def]) => [key, def.ui])
@@ -79,6 +80,7 @@ export default function App() {
         >
           Export Patch
         </button>
+        <ImportPatchButton></ImportPatchButton>
       </Panel>
       <Background />
     </ReactFlow>
