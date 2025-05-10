@@ -1,6 +1,7 @@
 import { NodeRegistry } from "./registry";
 import { engine } from "../audio";
 import { useStore } from "../store";
+import { validatePatch } from "./validate.ts";
 
 function readPatchFile(file) {
   return new Promise((resolve, reject) => {
@@ -11,8 +12,9 @@ function readPatchFile(file) {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const patch = validatePatch(JSON.parse(reader.result));
-        resolve(patch);
+        const raw = JSON.parse(reader.result);
+        const validated = validatePatch(raw);
+        resolve(validated);
       } catch (err) {
         reject(new Error("Invalid JSON in patch file."));
       }
@@ -23,7 +25,9 @@ function readPatchFile(file) {
 }
 
 export async function importPatchFromFile(file) {
-  const { nodes, edges } = await readPatchFile(file);
+  const patchFile = await readPatchFile(file);
+  const { graph, ui } = patchFile;
+  const { nodes, edges } = graph;
 
   engine.reset();
 
@@ -38,5 +42,10 @@ export async function importPatchFromFile(file) {
     engine.connect(edge.source, edge.target);
   }
 
-  useStore.setState({ nodes, edges });
+  const withPositions = nodes.map((node) => ({
+    ...node,
+    position: ui?.positions?.[node.id] ?? { x: 0, y: 0 },
+  }));
+
+  useStore.setState({ nodes: withPositions, edges });
 }

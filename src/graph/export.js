@@ -1,18 +1,18 @@
-import { validatePatch } from "./model.js";
+import { validatePatch } from "./validate.ts";
 
-function createPatchJSON(nodes, edges, meta = {}) {
-  const cleanNodes = nodes.map(({ id, type, data, position }) => ({
-    id,
-    type,
-    data,
-    position,
-  }));
-
+function toPatchIR(nodes, edges) {
+  const cleanNodes = nodes.map(({ id, type, data }) => ({ id, type, data }));
   const cleanEdges = edges.map(({ id, source, target }) => ({
     id,
     source,
     target,
   }));
+  return { nodes: cleanNodes, edges: cleanEdges };
+}
+
+function toPatchFile(nodes, edges, meta = {}) {
+  const graph = toPatchIR(nodes, edges);
+  const positions = Object.fromEntries(nodes.map((n) => [n.id, n.position]));
 
   return validatePatch({
     meta: {
@@ -20,13 +20,13 @@ function createPatchJSON(nodes, edges, meta = {}) {
       created: new Date().toISOString(),
       ...meta,
     },
-    nodes: cleanNodes,
-    edges: cleanEdges,
+    ui: { positions },
+    graph,
   });
 }
 
-function triggerDownload(patch, filename = "patch.json") {
-  const json = JSON.stringify(patch, null, 2);
+function triggerDownload(patchFile, filename = "patch.json") {
+  const json = JSON.stringify(patchFile, null, 2);
   const blob = new Blob([json], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -42,7 +42,7 @@ function makeTimestampedFilename(base = "patch", ext = "json") {
 }
 
 export function exportPatchToFile(nodes, edges, { filename, meta = {} } = {}) {
-  const patch = createPatchJSON(nodes, edges, meta);
+  const patchFile = toPatchFile(nodes, edges, meta);
   const finalName = filename || makeTimestampedFilename("patch", "json");
-  triggerDownload(patch, finalName);
+  triggerDownload(patchFile, finalName);
 }
