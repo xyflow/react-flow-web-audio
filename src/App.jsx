@@ -26,6 +26,7 @@ const selector = (store) => ({
   addEdge: store.addEdge,
   addOsc: () => store.createNode("osc"),
   addAmp: () => store.createNode("amp"),
+  addFilter: () => store.createNode("filter"),
 });
 
 export default function App() {
@@ -61,6 +62,12 @@ export default function App() {
           onClick={store.addAmp}
         >
           Add Amp
+        </button>
+        <button
+          className={tw("px-2 py-1 rounded bg-white shadow")}
+          onClick={store.addFilter}
+        >
+          Add Filter
         </button>
         <button
           className={tw("px-2 py-1 rounded bg-white shadow")}
