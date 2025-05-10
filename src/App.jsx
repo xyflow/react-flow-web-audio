@@ -1,15 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactFlow, {
-  ReactFlowProvider,
   Background,
   Panel,
-  useReactFlow,
 } from "reactflow";
 import { shallow } from "zustand/shallow";
 import { useStore } from "./store";
+import { NodeRegistry } from "./graph/registry";
+import { engine } from "./audio";
 import { tw } from "twind";
-import { NodeRegistry } from './graph/registry';
-
 
 import "reactflow/dist/style.css";
 
@@ -31,6 +29,21 @@ const selector = (store) => ({
 
 export default function App() {
   const store = useStore(selector, shallow);
+
+  useEffect(() => {
+    for (const node of store.nodes) {
+      const def = NodeRegistry.get(node.type);
+      if (!def) continue;
+      engine.createNode(node.id, def.factory, node.data);
+    }
+
+    for (const edge of store.edges) {
+      engine.connect(edge.source, edge.target);
+    }
+
+    engine.context.suspend();
+  }, []); // <- Only run once on mount
+
   return (
     <ReactFlow
       nodeTypes={nodeTypes}
