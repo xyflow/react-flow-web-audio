@@ -9,6 +9,8 @@ import { tw } from "twind";
 
 import "reactflow/dist/style.css";
 import ImportPatchButton from "./components/ImportPatchButton";
+import { executeGraph } from "./graph/executeGraph";
+import { toIR } from "./graph/toIR";
 
 const nodeTypes = Object.fromEntries(
   [...NodeRegistry.entries()].map(([key, def]) => [key, def.ui])
@@ -30,18 +32,8 @@ export default function App() {
   const store = useStore(selector, shallow);
 
   useEffect(() => {
-    engine.reset();
-
-    for (const node of store.nodes) {
-      const def = NodeRegistry.get(node.type);
-      if (!def) continue;
-      engine.createNode(node.id, def.factory, node.data);
-    }
-
-    for (const edge of store.edges) {
-      engine.connect(edge.source, edge.target);
-    }
-
+    const { nodes, edges } = toIR(store.nodes, store.edges);
+    executeGraph(engine, nodes, edges);
     engine.context.suspend();
   }, []);
 

@@ -1,7 +1,7 @@
-import { NodeRegistry } from "./registry";
 import { engine } from "../audio";
 import { useStore } from "../store";
 import { validatePatch } from "./validate.ts";
+import { executeGraph } from "./executeGraph.ts";
 
 function readPatchFile(file) {
   return new Promise((resolve, reject) => {
@@ -25,27 +25,17 @@ function readPatchFile(file) {
 }
 
 export async function importPatchFromFile(file) {
-  const patchFile = await readPatchFile(file);
-  const { graph, ui } = patchFile;
-  const { nodes, edges } = graph;
+  const patch = await readPatchFile(file);
+  const { graph, ui } = patch;
 
-  engine.reset();
+  // Delegate to runtime executor
+  executeGraph(engine, graph.nodes, graph.edges);
 
-  for (const node of nodes) {
-    const def = NodeRegistry.get(node.type);
-    if (def) {
-      engine.createNode(node.id, def.factory, node.data);
-    }
-  }
-
-  for (const edge of edges) {
-    engine.connect(edge.source, edge.target);
-  }
-
-  const withPositions = nodes.map((node) => ({
+  // Convert back to ReactFlow format with positions
+  const withPositions = graph.nodes.map((node) => ({
     ...node,
     position: ui?.positions?.[node.id] ?? { x: 0, y: 0 },
   }));
 
-  useStore.setState({ nodes: withPositions, edges });
+  useStore.setState({ nodes: withPositions, edges: graph.edges });
 }
