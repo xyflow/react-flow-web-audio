@@ -1,17 +1,14 @@
 import React, { useEffect } from "react";
-import ReactFlow, {
-  Background,
-  Panel,
-} from "reactflow";
+import ReactFlow, { Background, Panel } from "reactflow";
 import { shallow } from "zustand/shallow";
 import { useStore } from "./store";
 import { NodeRegistry } from "./graph/registry";
+import { exportPatchToFile } from "./graph/export";
 import { engine } from "./audio";
 import { tw } from "twind";
 
 import "reactflow/dist/style.css";
 
-console.log([...NodeRegistry.keys()])
 const nodeTypes = Object.fromEntries(
   [...NodeRegistry.entries()].map(([key, def]) => [key, def.ui])
 );
@@ -71,6 +68,16 @@ export default function App() {
           onClick={store.addAmp}
         >
           Add Amp
+        </button>
+        <button
+          className={tw("px-2 py-1 rounded bg-white shadow")}
+          onClick={() =>
+            exportPatchToFile(store.nodes, store.edges, {
+              meta: { name: "My Patch", author: "you" },
+            })
+          }
+        >
+          Export Patch
         </button>
       </Panel>
       <Background />
