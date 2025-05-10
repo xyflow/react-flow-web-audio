@@ -10,6 +10,7 @@ import {
   connect,
   disconnect,
 } from "./audio";
+import { NodeRegistry } from "./graph/registry";
 
 export const useStore = create((set, get) => ({
   nodes: [
@@ -45,30 +46,17 @@ export const useStore = create((set, get) => ({
     });
   },
 
-  createNode(type, x, y) {
+  createNode(type, position = { x: 0, y: 0 }) {
+    const def = NodeRegistry.get(type);
     const id = nanoid();
+    const data = {};
 
-    switch (type) {
-      case "osc": {
-        const data = { frequency: 440, type: "sine" };
-        const position = { x: 0, y: 0 };
-
-        createAudioNode(id, type, data);
-        set({ nodes: [...get().nodes, { id, type, data, position }] });
-
-        break;
-      }
-
-      case "amp": {
-        const data = { gain: 0.5 };
-        const position = { x: 0, y: 0 };
-
-        createAudioNode(id, type, data);
-        set({ nodes: [...get().nodes, { id, type, data, position }] });
-
-        break;
-      }
+    for (const [key, input] of Object.entries(def.inputs || {})) {
+      data[key] = input.default;
     }
+
+    createAudioNode(id, type, data);
+    set({ nodes: [...get().nodes, { id, type, data, position }] });
   },
 
   updateNode(id, data) {

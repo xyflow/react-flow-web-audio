@@ -8,17 +8,14 @@ import ReactFlow, {
 import { shallow } from "zustand/shallow";
 import { useStore } from "./store";
 import { tw } from "twind";
-import Osc from "./nodes/Osc";
-import Amp from "./nodes/Amp";
-import Out from "./nodes/Out";
+import { NodeRegistry } from './graph/registry';
+
 
 import "reactflow/dist/style.css";
 
-const nodeTypes = {
-  osc: Osc,
-  amp: Amp,
-  out: Out,
-};
+const nodeTypes = Object.fromEntries(
+  [...NodeRegistry.entries()].map(([key, def]) => [key, def.ui])
+);
 
 const selector = (store) => ({
   nodes: store.nodes,
