@@ -3,24 +3,24 @@ import { engine } from "../audio";
 import { useStore } from "../store";
 
 function readPatchFile(file) {
-    return new Promise((resolve, reject) => {
-      if (!file.name.endsWith(".json")) {
-        return reject(new Error("Only .json patch files are supported."));
+  return new Promise((resolve, reject) => {
+    if (!file.name.endsWith(".json")) {
+      return reject(new Error("Only .json patch files are supported."));
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const patch = validatePatch(JSON.parse(reader.result));
+        resolve(patch);
+      } catch (err) {
+        reject(new Error("Invalid JSON in patch file."));
       }
-  
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const patch = JSON.parse(reader.result);
-          resolve(patch);
-        } catch (err) {
-          reject(new Error("Invalid JSON in patch file."));
-        }
-      };
-      reader.onerror = () => reject(new Error("Failed to read patch file."));
-      reader.readAsText(file);
-    });
-  }
+    };
+    reader.onerror = () => reject(new Error("Failed to read patch file."));
+    reader.readAsText(file);
+  });
+}
 
 export async function importPatchFromFile(file) {
   const { nodes, edges } = await readPatchFile(file);

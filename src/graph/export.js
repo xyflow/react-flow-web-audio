@@ -1,3 +1,5 @@
+import { validatePatch } from "./model.js";
+
 function createPatchJSON(nodes, edges, meta = {}) {
   const cleanNodes = nodes.map(({ id, type, data, position }) => ({
     id,
@@ -12,7 +14,7 @@ function createPatchJSON(nodes, edges, meta = {}) {
     target,
   }));
 
-  return {
+  return validatePatch({
     meta: {
       version: 1,
       created: new Date().toISOString(),
@@ -20,7 +22,7 @@ function createPatchJSON(nodes, edges, meta = {}) {
     },
     nodes: cleanNodes,
     edges: cleanEdges,
-  };
+  });
 }
 
 function triggerDownload(patch, filename = "patch.json") {
