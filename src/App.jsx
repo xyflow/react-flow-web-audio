@@ -11,6 +11,7 @@ import { tw } from "twind";
 
 import "reactflow/dist/style.css";
 
+console.log([...NodeRegistry.keys()])
 const nodeTypes = Object.fromEntries(
   [...NodeRegistry.entries()].map(([key, def]) => [key, def.ui])
 );
@@ -32,7 +33,7 @@ export default function App() {
 
   useEffect(() => {
     engine.reset();
-    
+
     for (const node of store.nodes) {
       const def = NodeRegistry.get(node.type);
       if (!def) continue;

@@ -1,27 +1,27 @@
 import React from "react";
 import { Handle } from "reactflow";
-import { shallow } from "zustand/shallow";
 import { tw } from "twind";
-import { useStore } from "../store";
+import { shallow } from "zustand/shallow";
+import { useStore } from "../../store";
 
-const selector = (id) => (store) => ({
-  setGain: (e) => store.updateNode(id, { gain: +e.target.value }),
-});
-
-export default function Osc({ id, data }) {
-  const { setGain } = useStore(selector(id), shallow);
+export default function AmpUI({ id, data }) {
+  const { setGain } = useStore(
+    (store) => ({
+      setGain: (e) => store.updateNode(id, { gain: +e.target.value }),
+    }),
+    shallow
+  );
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl")}>
-      <Handle className={tw("w-2 h-2")} type="target" position="top" />
-
       <p
         className={tw("rounded-t-md px-2 py-1 bg-blue-500 text-white text-sm")}
       >
-        Amp
+        Gain
       </p>
+
       <label className={tw("flex flex-col px-2 pt-1 pb-4")}>
-        <p className={tw("text-xs font-bold mb-2")}>Gain</p>
+        <span className={tw("text-xs font-bold mb-2")}>Gain</span>
         <input
           className="nodrag"
           type="range"
@@ -31,9 +31,10 @@ export default function Osc({ id, data }) {
           value={data.gain}
           onChange={setGain}
         />
-        <p className={tw("text-right text-xs")}>{data.gain.toFixed(2)}</p>
+        <span className={tw("text-right text-xs")}>{data.gain.toFixed(2)}</span>
       </label>
 
+      <Handle className={tw("w-2 h-2")} type="target" position="top" />
       <Handle className={tw("w-2 h-2")} type="source" position="bottom" />
     </div>
   );

@@ -1,26 +1,10 @@
 import osc from "../nodes/osc";
-import Amp from "../nodes/Amp.jsx";
+import amp from "../nodes/amp";
 import Out from "../nodes/Out.jsx";
 
 export const NodeRegistry = new Map([
   [osc.id, osc],
-  [
-    "amp",
-    {
-      id: "amp",
-      label: "Gain",
-      inputs: {
-        gain: { type: "number", default: 0.5 },
-      },
-      outputs: { audio: { type: "audio" } },
-      ui: Amp,
-      factory: (ctx, data) => {
-        const node = ctx.createGain();
-        node.gain.value = data.gain;
-        return node;
-      },
-    },
-  ],
+  [amp.id, amp],
   [
     "out",
     {
