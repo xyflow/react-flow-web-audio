@@ -1,6 +1,6 @@
 import React from "react";
-import { Handle } from "reactflow";
-import { shallow } from "zustand/shallow";
+import { Handle, Position } from "@xyflow/react";
+import { useShallow } from "zustand/react/shallow";
 import { tw } from "twind";
 import { useStore } from "../store";
 
@@ -10,7 +10,7 @@ const selector = (id) => (store) => ({
 });
 
 export default function Osc({ id, data }) {
-  const { setFrequency, setType } = useStore(selector(id), shallow);
+  const { setFrequency, setType } = useStore(useShallow(selector(id)));
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl")}>
@@ -45,7 +45,7 @@ export default function Osc({ id, data }) {
         </select>
       </label>
 
-      <Handle className={tw("w-2 h-2")} type="source" position="bottom" />
+      <Handle className={tw("w-2 h-2")} type="source" position={Position.Bottom} />
     </div>
   );
 }

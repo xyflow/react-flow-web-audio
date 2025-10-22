@@ -1,18 +1,16 @@
-import React from "react";
 import ReactFlow, {
-  ReactFlowProvider,
   Background,
-  Panel,
-  useReactFlow,
-} from "reactflow";
-import { shallow } from "zustand/shallow";
-import { useStore } from "./store";
+  Panel
+} from "@xyflow/react";
+import React from "react";
 import { tw } from "twind";
-import Osc from "./nodes/Osc";
+import { useShallow } from "zustand/react/shallow";
 import Amp from "./nodes/Amp";
+import Osc from "./nodes/Osc";
 import Out from "./nodes/Out";
+import { useStore } from "./store";
 
-import "reactflow/dist/style.css";
+import "@xyflow/react/dist/style.css";
 
 const nodeTypes = {
   osc: Osc,
@@ -33,7 +31,7 @@ const selector = (store) => ({
 });
 
 export default function App() {
-  const store = useStore(selector, shallow);
+  const store = useStore(useShallow(selector));
   return (
     <ReactFlow
       nodeTypes={nodeTypes}

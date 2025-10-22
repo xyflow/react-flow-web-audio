@@ -1,6 +1,6 @@
 import React from "react";
-import { Handle } from "reactflow";
-import { shallow } from "zustand/shallow";
+import { Handle, Position } from "@xyflow/react";
+import { useShallow } from "zustand/react/shallow";
 import { tw } from "twind";
 import { useStore } from "../store";
 
@@ -9,11 +9,11 @@ const selector = (id) => (store) => ({
 });
 
 export default function Osc({ id, data }) {
-  const { setGain } = useStore(selector(id), shallow);
+  const { setGain } = useStore(useShallow(selector(id)));
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl")}>
-      <Handle className={tw("w-2 h-2")} type="target" position="top" />
+      <Handle className={tw("w-2 h-2")} type="target" position={Position.Top} />
 
       <p
         className={tw("rounded-t-md px-2 py-1 bg-blue-500 text-white text-sm")}
@@ -34,7 +34,7 @@ export default function Osc({ id, data }) {
         <p className={tw("text-right text-xs")}>{data.gain.toFixed(2)}</p>
       </label>
 
-      <Handle className={tw("w-2 h-2")} type="source" position="bottom" />
+      <Handle className={tw("w-2 h-2")} type="source" position={Position.Bottom} />
     </div>
   );
 }
