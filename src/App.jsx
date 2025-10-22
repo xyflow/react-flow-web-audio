@@ -1,8 +1,9 @@
-import ReactFlow, {
+import  {
+  ReactFlow,
   Background,
   Panel
 } from "@xyflow/react";
-import React from "react";
+import React, { useCallback } from "react";
 import { tw } from "twind";
 import { useShallow } from "zustand/react/shallow";
 import Amp from "./nodes/Amp";
@@ -18,42 +19,40 @@ const nodeTypes = {
   out: Out,
 };
 
-const selector = (store) => ({
-  nodes: store.nodes,
-  edges: store.edges,
-  onNodesChange: store.onNodesChange,
-  onNodesDelete: store.onNodesDelete,
-  onEdgesChange: store.onEdgesChange,
-  onEdgesDelete: store.onEdgesDelete,
-  addEdge: store.addEdge,
-  addOsc: () => store.createNode("osc"),
-  addAmp: () => store.createNode("amp"),
-});
-
 export default function App() {
-  const store = useStore(useShallow(selector));
+  const nodes = useStore((store) => store.nodes);
+  const edges = useStore((store) => store.edges);
+  const onNodesChange = useStore((store) => store.onNodesChange);
+  const onNodesDelete = useStore((store) => store.onNodesDelete);
+  const onEdgesChange = useStore((store) => store.onEdgesChange);
+  const onEdgesDelete = useStore((store) => store.onEdgesDelete);
+  const addEdge = useStore((store) => store.addEdge);
+  const createNode = useStore((store) => store.createNode);
+
+  const addOsc = useCallback(() => createNode("osc", 0, 0), [createNode]);
+  const addAmp = useCallback(() => createNode("amp", 0, 0), [createNode]);
   return (
     <ReactFlow
       nodeTypes={nodeTypes}
-      nodes={store.nodes}
-      edges={store.edges}
-      onNodesChange={store.onNodesChange}
-      onNodesDelete={store.onNodesDelete}
-      onEdgesChange={store.onEdgesChange}
-      onEdgesDelete={store.onEdgesDelete}
-      onConnect={store.addEdge}
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onNodesDelete={onNodesDelete}
+      onEdgesChange={onEdgesChange}
+      onEdgesDelete={onEdgesDelete}
+      onConnect={addEdge}
       fitView
     >
       <Panel className={tw("space-x-4")} position="top-right">
         <button
           className={tw("px-2 py-1 rounded bg-white shadow")}
-          onClick={store.addOsc}
+          onClick={addOsc}
         >
           Add Osc
         </button>
         <button
           className={tw("px-2 py-1 rounded bg-white shadow")}
-          onClick={store.addAmp}
+          onClick={addAmp}
         >
           Add Amp
         </button>

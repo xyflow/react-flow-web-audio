@@ -1,16 +1,11 @@
 import React from "react";
 import { Handle, Position } from "@xyflow/react";
-import { useShallow } from "zustand/react/shallow";
 import { useStore } from "../store";
 import { tw } from "twind";
 
-const selector = (store) => ({
-  isRunning: store.isRunning,
-  toggleAudio: store.toggleAudio,
-});
-
-export default function Out({ id, data }) {
-  const { isRunning, toggleAudio } = useStore(useShallow(selector));
+export default function Out() {
+  const isRunning = useStore((store) => store.isRunning);
+  const toggleAudio = useStore((store) => store.toggleAudio);
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl px-4 py-2")}>

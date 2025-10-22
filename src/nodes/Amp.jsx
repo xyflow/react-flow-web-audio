@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Handle, Position } from "@xyflow/react";
-import { useShallow } from "zustand/react/shallow";
 import { tw } from "twind";
 import { useStore } from "../store";
 
-const selector = (id) => (store) => ({
-  setGain: (e) => store.updateNode(id, { gain: +e.target.value }),
-});
-
-export default function Osc({ id, data }) {
-  const { setGain } = useStore(useShallow(selector(id)));
+export default function Amp({ id, data }) {
+  const updateNode = useStore((store) => store.updateNode);
+  
+  const setGain = useCallback((e) => {
+    updateNode(id, { gain: +e.target.value });
+  }, [id, updateNode]);
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl")}>
