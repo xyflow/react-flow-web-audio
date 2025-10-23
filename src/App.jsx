@@ -20,14 +20,25 @@ const nodeTypes = {
 };
 
 export default function App() {
-  const nodes = useStore((store) => store.nodes);
-  const edges = useStore((store) => store.edges);
-  const onNodesChange = useStore((store) => store.onNodesChange);
-  const onNodesDelete = useStore((store) => store.onNodesDelete);
-  const onEdgesChange = useStore((store) => store.onEdgesChange);
-  const onEdgesDelete = useStore((store) => store.onEdgesDelete);
-  const addEdge = useStore((store) => store.addEdge);
-  const createNode = useStore((store) => store.createNode);
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onNodesDelete,
+    onEdgesChange,
+    onEdgesDelete,
+    addEdge,
+    createNode,
+  } = useStore(useShallow((store) => ({
+    nodes: store.nodes,
+    edges: store.edges,
+    onNodesChange: store.onNodesChange,
+    onNodesDelete: store.onNodesDelete,
+    onEdgesChange: store.onEdgesChange,
+    onEdgesDelete: store.onEdgesDelete,
+    addEdge: store.addEdge,
+    createNode: store.createNode,
+  })));
 
   const addOsc = useCallback(() => createNode("osc", 0, 0), [createNode]);
   const addAmp = useCallback(() => createNode("amp", 0, 0), [createNode]);
