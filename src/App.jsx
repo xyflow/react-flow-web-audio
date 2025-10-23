@@ -1,18 +1,17 @@
-import React from "react";
-import ReactFlow, {
-  ReactFlowProvider,
+import  {
+  ReactFlow,
   Background,
-  Panel,
-  useReactFlow,
-} from "reactflow";
-import { shallow } from "zustand/shallow";
-import { useStore } from "./store";
+  Panel
+} from "@xyflow/react";
+import React, { useCallback } from "react";
 import { tw } from "twind";
-import Osc from "./nodes/Osc";
+import { useShallow } from "zustand/react/shallow";
 import Amp from "./nodes/Amp";
+import Osc from "./nodes/Osc";
 import Out from "./nodes/Out";
+import { useStore } from "./store";
 
-import "reactflow/dist/style.css";
+import "@xyflow/react/dist/style.css";
 
 const nodeTypes = {
   osc: Osc,
@@ -20,42 +19,51 @@ const nodeTypes = {
   out: Out,
 };
 
-const selector = (store) => ({
-  nodes: store.nodes,
-  edges: store.edges,
-  onNodesChange: store.onNodesChange,
-  onNodesDelete: store.onNodesDelete,
-  onEdgesChange: store.onEdgesChange,
-  onEdgesDelete: store.onEdgesDelete,
-  addEdge: store.addEdge,
-  addOsc: () => store.createNode("osc"),
-  addAmp: () => store.createNode("amp"),
-});
-
 export default function App() {
-  const store = useStore(selector, shallow);
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onNodesDelete,
+    onEdgesChange,
+    onEdgesDelete,
+    addEdge,
+    createNode,
+  } = useStore(useShallow((store) => ({
+    nodes: store.nodes,
+    edges: store.edges,
+    onNodesChange: store.onNodesChange,
+    onNodesDelete: store.onNodesDelete,
+    onEdgesChange: store.onEdgesChange,
+    onEdgesDelete: store.onEdgesDelete,
+    addEdge: store.addEdge,
+    createNode: store.createNode,
+  })));
+
+  const addOsc = useCallback(() => createNode("osc", 0, 0), [createNode]);
+  const addAmp = useCallback(() => createNode("amp", 0, 0), [createNode]);
   return (
     <ReactFlow
       nodeTypes={nodeTypes}
-      nodes={store.nodes}
-      edges={store.edges}
-      onNodesChange={store.onNodesChange}
-      onNodesDelete={store.onNodesDelete}
-      onEdgesChange={store.onEdgesChange}
-      onEdgesDelete={store.onEdgesDelete}
-      onConnect={store.addEdge}
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onNodesDelete={onNodesDelete}
+      onEdgesChange={onEdgesChange}
+      onEdgesDelete={onEdgesDelete}
+      onConnect={addEdge}
       fitView
     >
       <Panel className={tw("space-x-4")} position="top-right">
         <button
           className={tw("px-2 py-1 rounded bg-white shadow")}
-          onClick={store.addOsc}
+          onClick={addOsc}
         >
           Add Osc
         </button>
         <button
           className={tw("px-2 py-1 rounded bg-white shadow")}
-          onClick={store.addAmp}
+          onClick={addAmp}
         >
           Add Amp
         </button>
