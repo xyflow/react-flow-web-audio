@@ -27,17 +27,17 @@ This app was built using [Vite](https://vitejs.dev/) for development.
 Before you start, you need to install the dependencies:
 
 ```sh
-npm install
+pnpm install
 ```
 
 ### Spin up a dev server
 
 ```sh
-npm run dev
+pnpm dev
 ```
 
 ### Build
 
 ```sh
-npm run build
+pnpm build
 ```

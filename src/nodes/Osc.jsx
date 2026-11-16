@@ -1,16 +1,12 @@
 import React from "react";
-import { Handle } from "reactflow";
-import { shallow } from "zustand/shallow";
+import { Handle } from "@xyflow/react";
 import { tw } from "twind";
 import { useStore } from "../store";
 
-const selector = (id) => (store) => ({
-  setFrequency: (e) => store.updateNode(id, { frequency: +e.target.value }),
-  setType: (e) => store.updateNode(id, { type: e.target.value }),
-});
-
 export default function Osc({ id, data }) {
-  const { setFrequency, setType } = useStore(selector(id), shallow);
+  const updateNode = useStore((state) => state.updateNode);
+  const setFrequency = (e) => updateNode(id, { frequency: +e.target.value });
+  const setType = (e) => updateNode(id, { type: e.target.value });
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl")}>

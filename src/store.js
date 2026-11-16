@@ -1,4 +1,3 @@
-import { applyNodeChanges, applyEdgeChanges } from "reactflow";
 import { nanoid } from "nanoid";
 import { create } from "zustand";
 import {
@@ -25,7 +24,7 @@ export const useStore = create((set, get) => ({
       data: { gain: 0.5 },
       position: { x: -100, y: 100 },
     },
-    { id: "output", type: "out", position: { x: 50, y: 250 } },
+    { id: "output", type: "out", data: {}, position: { x: 50, y: 250 } },
   ],
   edges: [
     { id: "osc->amp", source: "osc", target: "amp" },
@@ -41,7 +40,7 @@ export const useStore = create((set, get) => ({
 
   onNodesChange(changes) {
     set({
-      nodes: applyNodeChanges(changes, get().nodes),
+      nodes: changes.applyTo(get().nodes),
     });
   },
 
@@ -90,7 +89,7 @@ export const useStore = create((set, get) => ({
 
   onEdgesChange(changes) {
     set({
-      edges: applyEdgeChanges(changes, get().edges),
+      edges: changes.applyTo(get().edges),
     });
   },
 

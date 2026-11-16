@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ReactFlowProvider } from "reactflow";
+import { ReactFlowProvider } from "@xyflow/react";
 import App from "./App";
 
-import "reactflow/dist/style.css";
+import "@xyflow/react/style.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -12,5 +12,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <App />
       </div>
     </ReactFlowProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

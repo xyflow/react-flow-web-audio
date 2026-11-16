@@ -1,15 +1,11 @@
 import React from "react";
-import { Handle } from "reactflow";
-import { shallow } from "zustand/shallow";
+import { Handle } from "@xyflow/react";
 import { tw } from "twind";
 import { useStore } from "../store";
 
-const selector = (id) => (store) => ({
-  setGain: (e) => store.updateNode(id, { gain: +e.target.value }),
-});
-
 export default function Osc({ id, data }) {
-  const { setGain } = useStore(selector(id), shallow);
+  const updateNode = useStore((state) => state.updateNode);
+  const setGain = (e) => updateNode(id, { gain: +e.target.value });
 
   return (
     <div className={tw("rounded-md bg-white shadow-xl")}>
